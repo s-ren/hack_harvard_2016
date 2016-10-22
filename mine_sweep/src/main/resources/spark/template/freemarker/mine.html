@@ -7,79 +7,56 @@
 
 <script type="text/javascript" src="static/js/jquery-2.1.1.js"></script>
 <script type="text/javascript" src="static/js/materialize.min.js"></script>
-<script type="text/javascript">
-	var idUser;
-	var idRoom;
+<script type="text/javascript" src="static/js/mine.js"></script>
 
-	function getRandomID(){
-		var max = 999999;
-		var min = 100000;
-		return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
-
-	function genID(){
-		idUser = getRandomID();
-		document.getElementById("ID").value = idUser.toString();
-	}
-
-	function join(){
-	    idRoom = document.getElementById("room").value;
-		$.get("/newUser", { roomID: idRoom, userID: idUser });
-	}
-</script>
-
-<body onload="genID()">
+<body onload="start()">
 <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Mine</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="#">Link</a></li>
-        </ul>
-
-        <ul id="nav-mobile" class="side-nav">
-            <li><a href="#">Link</a></li>
-        </ul>
-        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
+    <div class="nav-wrapper container"><a id="logo-container" class="brand-logo">Mine</a></div>
 </nav>
-<center>
-    <div class="section"></div>
-    <h5 class="indigo-text">Join a mine room!</h5>
-    <div class="section"></div>
-    <div class="container">
-        <div class="z-depth-1 grey lighten-4 row"
-             style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
-            <form class="col s12" method="post">
+<div class="container" id="divOne">
+    <center>
+        <div class="section"></div>
+        <h5 class="indigo-text">Join a mine room!</h5>
+        <div class="section"></div>
+        <div class="container">
+            <div class="z-depth-1 grey lighten-4 row"
+                 style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+                <form class="col s12" method="post">
 
-                <div class='row'>
-                    <div class='col s12'>
+                    <div class="row">
+                        <div class="col s12">
+                        </div>
                     </div>
-                </div>
 
-                <div class='row'>
-                    <div class='input-field col s12'>
-                        <input type='number' name='ID' id='ID' placeholder="ID" readonly/>
-                        <label for='ID'>ID</label>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input type="number" name="ID" id="ID" placeholder="ID" readonly/>
+                            <label for="ID">ID</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class='row'>
-                    <div class='input-field col s12'>
-                        <input class='active' type='number' name='room' id='room' placeholder="0000"/>
-                        <label for='room'>Room number</label>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input class="active" type="number" name="room" id="room" placeholder="0000"/>
+                            <label for="room">Room number</label>
+                        </div>
                     </div>
-                </div>
 
-                <center>
-                    <div class='row'>
-                        <button type='submit' name='login' class='col s12 btn btn-large waves-effect indigo'
-                                onclick="join()">Join
-                        </button>
-                    </div>
-                </center>
-            </form>
+                    <center>
+                        <div class="row">
+                            <button type="button" name="join" id="btn" class="col s12 btn btn-large waves-effect indigo"
+                                    onclick="joinRoom()">Join
+                            </button>
+                        </div>
+                    </center>
+                </form>
+            </div>
         </div>
-    </div>
-</center>
-</body>
+    </center>
+</div>
 
+<div class="container" id="divTwo" style="display: none;">
+    Hello!
+</div>
+</body>
 </html>
