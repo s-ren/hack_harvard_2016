@@ -66,7 +66,7 @@ public class Gui {
   /** Initial spark server setup. */
   private void runSparkServer() {
     Spark.setPort(PORTNUMBER);
-    Spark.externalStaticFileLocation("src/main/resources/static");
+    Spark.externalStaticFileLocation("src/main/resources");
     FreeMarkerEngine freeMarker = createEngine();
     // Setup Spark Routes
     Spark.get("/home", new LandingPage(), freeMarker);
