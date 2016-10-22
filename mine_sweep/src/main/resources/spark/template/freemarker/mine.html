@@ -1,1 +1,47 @@
-hello world!
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mine</title>
+    <link type="text/css" rel="stylesheet" href="static/css/mine.css"/>
+
+</head>
+
+<script src="static/js/jquery-2.1.1.js"></script>
+
+<script type="text/javascript">
+	var id_user;
+	var id_room;
+
+	function getRandomID(){
+		var max = 999999;
+		var min = 100000;
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	function genID(){
+		id_user = getRandomID();
+		document.getElementById("ID").value = id_user.toString();
+	}
+
+	function join(){
+	    id_room = document.getElementById("Room").value;
+		$.get("/newUser", JSON.stringify({ roomID: id_room, userID: id_user }));
+	}
+
+
+</script>
+
+<body onload="genID()">
+<div id="background">
+    <div id="filter">
+        <form id="login">
+            <h1 id="heading">Mine</h1>
+            <input name="Room" placeholder="Room#" id="Room#" type="text" size="25"/>
+            <input name="ID" placeholder="ID" id="ID" type="text" size="25"/>
+            <button type="button" onclick="enter()">Enter Game</button>
+        </form>
+    </div>
+</div>
+</body>
+
+</html>
