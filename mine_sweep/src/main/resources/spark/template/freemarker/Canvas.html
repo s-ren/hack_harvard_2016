@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Canvass</title>
+<link type="text/css" rel="stylesheet" href="Canvas.css" />
+
+</head>
+
+<body>
+
+<script src="jquery-3.1.0.js"></script> 
+<script type="text/javascript">
+		//grid width and height
+		var bw = 930;
+		var bh = 930;
+		//padding around grid
+		var p = 30;
+		//size of canvas
+		var cw = bw + (p*2);
+		var ch = bh + (p*2);
+
+		var canvas = $('<canvas/>').attr({width: cw, height: ch}).appendTo('body');
+
+		var context = canvas.get(0).getContext("2d");
+
+		function drawBoard(){
+		    for (var x = 0; x <= bw; x += 30) {
+		        context.moveTo(x + p, p);
+		        context.lineTo(x + p, bh + p);
+		    }
+
+		    for (var x = 0; x <= bh; x += 30) {
+		        context.moveTo(p, x + p);
+		        context.lineTo(bw + p, x + p);
+		    }
+
+		    context.strokeStyle = "black";
+		    context.stroke();
+		}
+
+		drawBoard();
+
+	
+		function changeColor(row,col){
+			context.fillRect(col*30,row*30, 30,30);
+
+		}
+
+		var xPosition;
+		var yPosition;
+
+		function getClickPosition(evt) {
+    		xPosition = evt.clientX;
+    		yPosition = evt.clientY;
+    		console.log(xPosition,yPosition);
+    		var col = parseInt(parseInt(xPosition.toString())/30);
+			var row = parseInt(parseInt(yPosition.toString())/30);			
+			changeColor(row,col);
+		}
+
+		
+		
+		
+
+document.addEventListener("mousedown",getClickPosition,false);
+
+
+</script>
+</body>
+</html>
