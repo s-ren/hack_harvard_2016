@@ -10,7 +10,7 @@
 
 <script type="text/javascript">
 	var id_user;
-	var id_room
+	var id_room;
 
 	function getRandomID(){
 		var max = 999999;
@@ -20,12 +20,12 @@
 
 	function genID(){
 		id_user = getRandomID();
-		document.getElementById("ID").value = id_num.toString();
+		document.getElementById("ID").value = id_user.toString();
 	}
 
 	function join(){
-	    room_id = document.getElementById("Room").value;
-		$.get("/newUser", JSON.stringify({ roomID: id_room, userID: id_num }));
+	    id_room = document.getElementById("Room").value;
+		$.get("/newUser", JSON.stringify({ roomID: id_room, userID: id_user }));
 	}
 
 
