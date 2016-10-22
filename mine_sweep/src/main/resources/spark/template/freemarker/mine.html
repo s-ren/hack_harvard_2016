@@ -8,8 +8,8 @@
 <script type="text/javascript" src="static/js/jquery-2.1.1.js"></script>
 <script type="text/javascript" src="static/js/materialize.min.js"></script>
 <script type="text/javascript">
-	var id_user;
-	var id_room;
+	var idUser;
+	var idRoom;
 
 	function getRandomID(){
 		var max = 999999;
@@ -18,13 +18,13 @@
 	}
 
 	function genID(){
-		id_user = getRandomID();
-		document.getElementById("ID").value = id_user.toString();
+		idUser = getRandomID();
+		document.getElementById("ID").value = idUser.toString();
 	}
 
 	function join(){
-	    id_room = document.getElementById("room").value;
-		$.get("/newUser", { roomID: id_room, userID: id_user });
+	    idRoom = document.getElementById("room").value;
+		$.get("/newUser", { roomID: idRoom, userID: idUser });
 	}
 </script>
 
