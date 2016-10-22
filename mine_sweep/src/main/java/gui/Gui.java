@@ -91,11 +91,12 @@ public class Gui {
       QueryParamsMap qm = req.queryMap();
       String userID = qm.value("userID");
       String roomID = qm.value("roomID");
+      System.out.println(" " + userID + " " + roomID);
       Map<String, Object> variables = new ImmutableMap.Builder()
       		.put("message1", userID + "!")
       		.put("message2", roomID + "!")
       		.build();
-      return new ModelAndView(variables, "mine.html");
+      return new ModelAndView(variables, "loading.html");
     }
   }
 /*
