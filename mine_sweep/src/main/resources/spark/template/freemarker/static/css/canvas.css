@@ -7,3 +7,13 @@
 #canvas{
 	margin:20px;
 }
+
+#flag{
+	src: url('flag.png');
+
+}
+
+#bomb{
+	src: url('bomb.png');
+
+}

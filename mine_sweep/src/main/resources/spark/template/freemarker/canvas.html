@@ -4,11 +4,13 @@
 <title>Canvass</title>
 <link type="text/css" rel="stylesheet" href="static/css/Canvas.css" />
 
+
 </head>
 
 <body>
 
 <script src="static/js/jquery-3.1.0.js"></script> 
+<script src="https://code.angularjs.org/1.5.8/angular.min.js"></script>
 <script type="text/javascript">
 
 const ID_MAX = 999999;
@@ -25,7 +27,7 @@ const STYLE_SWEPT = "#e0e0e0";
 const STYLE_UNSWEPT = "#9e9e9e";
 
 function isInRange(row, col, SIZE) {
-    return (row >= 0 && row < SIZE && row >= 0 && col < SIZE);
+    return (row >= 0 && row < SIZE && col >= 0 && col < SIZE);
 }
 
 function changeState(row, col, newState) {
@@ -85,8 +87,20 @@ function getClickPosition(evt) {
     }
 }
 
-document.addEventListener("mousedown", getClickPosition, false);
+var flagImg = document.getElementById("flag");
+var bombImg = document.getElementById("bomb");
 
+function makeFlag(row,col){
+    context.drawImage(flagImg,col*30,row*30);
+}
+
+function bomb(row,col){
+    context.drawImage(bombImg,col*30,row*30);
+}
+
+document.addEventListener("mousedown", getClickPosition, false);
+makeFlag(3,4);
+bomb(4,5);
 
 </script>
 </body>
