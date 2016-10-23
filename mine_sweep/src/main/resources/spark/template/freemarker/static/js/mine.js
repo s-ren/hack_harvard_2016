@@ -86,7 +86,7 @@ function explore(row, col) {
     changeColor(row, col, STYLE_SWEPT);
 }
 
-function makeFlag(row, col){
+function makeFlag(row, col) {
     var myImg = new Image();
     myImg.onload = function() {
         var myPtn = context.createPattern(this, "repeat");
@@ -105,13 +105,23 @@ function changeColor(row, col, style) {
 function handleClick(evt) {
     var col = parseInt(parseInt(evt.pageX.toString()) / LENGTH) - 1;
     var row = parseInt(parseInt(evt.pageY.toString() - NAV_HEIGHT) / LENGTH) - 1;
-    var curr = grids[row][col];
-    if (isInRange(row, col, SIZE)) {
-        if ((! curr.isVisible) || curr.isSwept || curr.isFlag)
-            console.log("should not respond");
-        //explore(row, col);
-        makeFlag(row, col)
+    if (isInRange(row, col)) {
+        var curr = grids[row][col];
+        if (evt.which == 1) {
+            if ((!curr.isVisible) || curr.isSwept || curr.isFlag)
+                console.log("should not respond");
+            explore(row, col);
+        } else if (evt.which == 3) {
+            makeFlag(row, col);
+        }
     }
+}
+
+function handleMenu(evt) {
+    var col = parseInt(parseInt(evt.pageX.toString()) / LENGTH) - 1;
+    var row = parseInt(parseInt(evt.pageY.toString() - NAV_HEIGHT) / LENGTH) - 1;
+    if (isInRange(row, col))
+        evt.preventDefault();
 }
 
 function init() {
@@ -143,4 +153,5 @@ function init() {
     drawBoard();
 
     document.addEventListener("mousedown", handleClick, false);
+    document.addEventListener("contextmenu", handleMenu, false);
 }
