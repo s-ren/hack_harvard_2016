@@ -2,67 +2,90 @@
 <html>
 <head>
 <title>Canvass</title>
-<link type="text/css" rel="stylesheet" href="Canvas.css" />
+<link type="text/css" rel="stylesheet" href="static/css/Canvas.css" />
 
 </head>
 
 <body>
 
-<script src="jquery-3.1.0.js"></script> 
+<script src="static/js/jquery-3.1.0.js"></script> 
 <script type="text/javascript">
-		//grid width and height
-		var bw = 930;
-		var bh = 930;
-		//padding around grid
-		var p = 30;
-		//size of canvas
-		var cw = bw + (p*2);
-		var ch = bh + (p*2);
 
-		var canvas = $('<canvas/>').attr({width: cw, height: ch}).appendTo('body');
+const ID_MAX = 999999;
+const ID_MIN = 100000;
 
-		var context = canvas.get(0).getContext("2d");
+const SIZE = 31;
+const LENGTH = 30;
+const BLOCK_WIDTH = SIZE * LENGTH;
+const BLOCK_HEIGHT = SIZE * LENGTH;
 
-		function drawBoard(){
-		    for (var x = 0; x <= bw; x += 30) {
-		        context.moveTo(x + p, p);
-		        context.lineTo(x + p, bh + p);
-		    }
+const VAL_VISIBLE = 0;
+const STYLE_INVISIBLE = "#000000";
+const STYLE_SWEPT = "#e0e0e0";
+const STYLE_UNSWEPT = "#9e9e9e";
 
-		    for (var x = 0; x <= bh; x += 30) {
-		        context.moveTo(p, x + p);
-		        context.lineTo(bw + p, x + p);
-		    }
+function isInRange(row, col, SIZE) {
+    return (row >= 0 && row < SIZE && row >= 0 && col < SIZE);
+}
 
-		    context.strokeStyle = "black";
-		    context.stroke();
-		}
+function changeState(row, col, newState) {
+    changeColor(row, col, STYLE_SWEPT)
+}
 
-		drawBoard();
+function explore(row, col) {
+    var newRow;
+    var newCol;
+    for (var i = -1; i < 2; i++) {
+        newRow = row + i;
+        for (var j = -1; j < 2; j++) {
+            newCol = col + j;
+            if (isInRange(newRow, newCol, SIZE)) {
+                changeState(newRow, newCol, VAL_VISIBLE);
+            }
+        }
+    }
+    changeColor(row, col, STYLE_UNSWEPT);
+}
 
-	
-		function changeColor(row,col){
-			context.fillRect(col*30,row*30, 30,30);
+var canvas = $('<canvas/>').attr({
+    width: BLOCK_WIDTH + 2 * LENGTH,
+    height: BLOCK_HEIGHT + 2 * LENGTH
+}).appendTo('body');
 
-		}
+var context = canvas.get(0).getContext("2d");
 
-		var xPosition;
-		var yPosition;
+function drawBoard() {
+    for (var x = 0; x <= BLOCK_WIDTH; x += 30) {
+        context.moveTo(x + LENGTH, LENGTH);
+        context.lineTo(x + LENGTH, BLOCK_HEIGHT + LENGTH);
+    }
 
-		function getClickPosition(evt) {
-    		xPosition = evt.clientX;
-    		yPosition = evt.clientY;
-    		console.log(xPosition,yPosition);
-    		var col = parseInt(parseInt(xPosition.toString())/30);
-			var row = parseInt(parseInt(yPosition.toString())/30);			
-			changeColor(row,col);
-		}
+    for (var y = 0; y <= BLOCK_HEIGHT; y += 30) {
+        context.moveTo(LENGTH, y + LENGTH);
+        context.lineTo(BLOCK_WIDTH + LENGTH, y + LENGTH);
+    }
 
-		
-		
-		
+    context.strokeStyle = "black";
+    context.stroke();
+}
 
-document.addEventListener("mousedown",getClickPosition,false);
+drawBoard();
+
+function changeColor(row, col, style) {
+    context.fillStyle = style;
+    context.fillRect((col + 1) * LENGTH, (row + 1) * LENGTH, LENGTH, LENGTH);
+
+}
+
+function getClickPosition(evt) {
+    var col = parseInt(parseInt(evt.pageX.toString()) / 30) - 1;
+    var row = parseInt(parseInt(evt.pageY.toString()) / 30) - 1;
+    if (isInRange(row, col, SIZE)) {
+        explore(row, col)
+    }
+}
+
+document.addEventListener("mousedown", getClickPosition, false);
 
 
 </script>

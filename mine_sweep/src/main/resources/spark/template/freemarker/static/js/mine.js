@@ -1,14 +1,26 @@
 const ID_MAX = 999999;
 const ID_MIN = 100000;
+
 const SIZE = 31;
-const VAL_VISIBLE = 0;
+const LENGTH = 30;
+const BLOCK_WIDTH = SIZE * LENGTH;
+const BLOCK_HEIGHT = SIZE * LENGTH;
+const NAV_HEIGHT = 64;
+
+const VAL_INVISIBLE = 0;
+const VAL_VISIBLE = 1;
+const VAL_OWNED = 2;
 const STYLE_INVISIBLE = "#000000";
 const STYLE_SWEPT = "#e0e0e0";
-const STYLE_UNSWETPT = "#757575";
+const STYLE_UNSWEPT = "#9e9e9e";
+const STYLE_FLAG = "#ff0000";
+
 var idUser;
 var idRoom;
 var webSocket;
 var grids;
+var canvas;
+var context;
 
 function start() {
     idUser = Math.floor(Math.random() * (ID_MAX - ID_MIN + 1)) + ID_MIN;
@@ -16,10 +28,9 @@ function start() {
 }
 
 function setupSocket() {
-    if (webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED) {
-        return;
+    if (webSocket == undefined || webSocket.readyState !== WebSocket.CLOSED) {
+        webSocket = new WebSocket("ws://localhost:4000/");
     }
-    webSocket = new WebSocket("ws://localhost:4000/");
 }
 
 function joinRoom() {
@@ -33,10 +44,67 @@ function joinRoom() {
         roomID: idRoom,
         userID: idUser
     });
+}
+
+function drawBoard() {
+    for (var x = 0; x <= BLOCK_WIDTH; x += 30) {
+        context.moveTo(x + LENGTH, LENGTH);
+        context.lineTo(x + LENGTH, BLOCK_HEIGHT + LENGTH);
+    }
+
+    for (var y = 0; y <= BLOCK_HEIGHT; y += 30) {
+        context.moveTo(LENGTH, y + LENGTH);
+        context.lineTo(BLOCK_WIDTH + LENGTH, y + LENGTH);
+    }
+
+    context.strokeStyle = "black";
+    context.stroke();
+}
+
+function isInRange(row, col) {
+    return (row >= 0 && row < SIZE && row >= 0 && col < SIZE);
+}
+
+function changeState(row, col, newState) {
+    newState = parseInt(newState);
+    console.log(newState >= 0 && newState < 16);
+    return false;
+}
+
+function explore(row, col) {
+    var newRow;
+    var newCol;
+    for (var i = -1; i < 2; i++) {
+        newRow = row + i;
+        for (var j = -1; j < 2; j++) {
+            newCol = col + j;
+            if (isInRange(newRow, newCol, SIZE)) {
+                changeColor(newRow, newCol, STYLE_UNSWEPT);
+            }
+        }
+    }
+    changeColor(row, col, STYLE_SWEPT);
+}
+
+function changeColor(row, col, style) {
+    context.fillStyle = style;
+    context.fillRect((col + 1) * LENGTH, (row + 1) * LENGTH, LENGTH, LENGTH);
 
 }
 
+function handleClick(evt) {
+    var col = parseInt(parseInt(evt.pageX.toString()) / 30) - 1;
+    var row = parseInt(parseInt(evt.pageY.toString() - NAV_HEIGHT) / 30) - 1;
+    if (isInRange(row, col, SIZE)) {
+        console.log(!grids[row][col].mine);
+        explore(row, col)
+    }
+}
+
 function init() {
+    // switch div
+    document.getElementById("divOne").style.display = "none";
+    document.getElementById("divThree").style.display = "block";
     // instantiate array
     grids = new Array(SIZE);
     for (var i = 0; i < SIZE; i++) {
@@ -46,30 +114,20 @@ function init() {
                 x: i,
                 y: j,
                 mine: false,
-                visible: false
+                visible: false,
+                swept: false,
+                flag: false
             }
         }
     }
-}
 
-function isInRange(x, y, SIZE) {
-    return (x >= 0 && x < SIZE && y >= 0 && y < SIZE);
-}
+    canvas = $('<canvas/>').attr({
+        width: BLOCK_WIDTH + 2 * LENGTH,
+        height: BLOCK_HEIGHT + 2 * LENGTH
+    }).appendTo('body');
+    context = canvas.get(0).getContext("2d");
 
-function changeState(x, y, newState) {
-    return false;
-}
+    drawBoard();
 
-function explore(x, y) {
-    var newX;
-    var newY;
-    for (var i = -1; i < 2; i++) {
-        newX = x + i;
-        for (var j = -1; j < 2; j++) {
-            newY = y + j;
-            if (isInRange(newX, newY, SIZE)) {
-                changeState(x, y, VAL_VISIBLE);
-            }
-        }
-    }
+    document.addEventListener("mousedown", handleClick, false);
 }
