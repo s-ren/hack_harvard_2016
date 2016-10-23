@@ -87,11 +87,15 @@ function getClickPosition(evt) {
     }
 }
 
-var flagImg = document.getElementById("flag");
-var bombImg = document.getElementById("bomb");
-
 function makeFlag(row,col){
-    context.drawImage(flagImg,col*30,row*30);
+    var myImg = new Image();
+    myImg.onload = function() {
+        var myPtn = context.createPattern(this, "repeat");
+        context.fillStyle = myPtn;
+        context.fillRect(30, 30, 30, 30);
+        context.fill();
+    };
+    myImg.src = "static/css/flag.png";
 }
 
 function bomb(row,col){
@@ -100,7 +104,7 @@ function bomb(row,col){
 
 document.addEventListener("mousedown", getClickPosition, false);
 makeFlag(3,4);
-bomb(4,5);
+//bomb(4,5);
 
 </script>
 </body>

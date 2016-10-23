@@ -2,7 +2,7 @@ const ID_MAX = 999999;
 const ID_MIN = 100000;
 
 const SIZE = 31;
-const LENGTH = 30;
+const LENGTH = 32;
 const BLOCK_WIDTH = SIZE * LENGTH;
 const BLOCK_HEIGHT = SIZE * LENGTH;
 const NAV_HEIGHT = 64;
@@ -47,12 +47,12 @@ function joinRoom() {
 }
 
 function drawBoard() {
-    for (var x = 0; x <= BLOCK_WIDTH; x += 30) {
+    for (var x = 0; x <= BLOCK_WIDTH; x += LENGTH) {
         context.moveTo(x + LENGTH, LENGTH);
         context.lineTo(x + LENGTH, BLOCK_HEIGHT + LENGTH);
     }
 
-    for (var y = 0; y <= BLOCK_HEIGHT; y += 30) {
+    for (var y = 0; y <= BLOCK_HEIGHT; y += LENGTH) {
         context.moveTo(LENGTH, y + LENGTH);
         context.lineTo(BLOCK_WIDTH + LENGTH, y + LENGTH);
     }
@@ -86,18 +86,31 @@ function explore(row, col) {
     changeColor(row, col, STYLE_SWEPT);
 }
 
+function makeFlag(row, col){
+    var myImg = new Image();
+    myImg.onload = function() {
+        var myPtn = context.createPattern(this, "repeat");
+        context.fillStyle = myPtn;
+        context.fillRect((col + 1) * LENGTH, (row + 1) * LENGTH, LENGTH, LENGTH);
+        context.fill();
+    };
+    myImg.src = "static/css/flag.png";
+}
+
 function changeColor(row, col, style) {
     context.fillStyle = style;
     context.fillRect((col + 1) * LENGTH, (row + 1) * LENGTH, LENGTH, LENGTH);
-
 }
 
 function handleClick(evt) {
-    var col = parseInt(parseInt(evt.pageX.toString()) / 30) - 1;
-    var row = parseInt(parseInt(evt.pageY.toString() - NAV_HEIGHT) / 30) - 1;
+    var col = parseInt(parseInt(evt.pageX.toString()) / LENGTH) - 1;
+    var row = parseInt(parseInt(evt.pageY.toString() - NAV_HEIGHT) / LENGTH) - 1;
+    var curr = grids[row][col];
     if (isInRange(row, col, SIZE)) {
-        console.log(!grids[row][col].mine);
-        explore(row, col)
+        if ((! curr.isVisible) || curr.isSwept || curr.isFlag)
+            console.log("should not respond");
+        //explore(row, col);
+        makeFlag(row, col)
     }
 }
 
