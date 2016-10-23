@@ -62,7 +62,7 @@ function drawBoard() {
 }
 
 function isInRange(row, col) {
-    return (row >= 0 && row < SIZE && row >= 0 && col < SIZE);
+    return (row >= 0 && row < SIZE && col >= 0 && col < SIZE);
 }
 
 function changeState(row, col, newState) {
