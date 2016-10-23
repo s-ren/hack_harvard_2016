@@ -86,7 +86,11 @@ function explore(row, col) {
     changeColor(row, col, STYLE_SWEPT);
 }
 
-function makeFlag(row, col) {
+function setMineCount(row, col, count) {
+    addIcon(row, col, "number-" + count);
+}
+
+function addIcon(row, col, filename) {
     var myImg = new Image();
     myImg.onload = function() {
         var myPtn = context.createPattern(this, "repeat");
@@ -94,7 +98,7 @@ function makeFlag(row, col) {
         context.fillRect((col + 1) * LENGTH, (row + 1) * LENGTH, LENGTH, LENGTH);
         context.fill();
     };
-    myImg.src = "static/icons/flag.png";
+    myImg.src = "static/icons/" + filename + ".png";
 }
 
 function changeColor(row, col, style) {
@@ -112,7 +116,7 @@ function handleClick(evt) {
                 console.log("should not respond");
             explore(row, col);
         } else if (evt.which == 3) {
-            makeFlag(row, col);
+            addIcon(row, col, "flag");
         }
     }
 }
