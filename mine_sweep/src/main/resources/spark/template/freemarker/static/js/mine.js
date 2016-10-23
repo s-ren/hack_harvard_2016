@@ -94,7 +94,7 @@ function makeFlag(row, col) {
         context.fillRect((col + 1) * LENGTH, (row + 1) * LENGTH, LENGTH, LENGTH);
         context.fill();
     };
-    myImg.src = "static/css/flag.png";
+    myImg.src = "static/icons/flag.png";
 }
 
 function changeColor(row, col, style) {
